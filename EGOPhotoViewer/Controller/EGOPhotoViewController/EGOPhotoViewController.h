@@ -62,6 +62,7 @@
 	UIView *_popoverOverlay;
 	UIView *_transferView;
 	
+    UIColor *_viewerBackground;
 }
 
 - (id)initWithPhoto:(id<EGOPhoto>)aPhoto;
@@ -76,6 +77,7 @@
 @property(nonatomic,retain) NSMutableArray *photoViews;
 @property(nonatomic,retain) UIScrollView *scrollView;
 @property(nonatomic,assign) BOOL _fromPopover;
+@property(nonatomic,retain) UIColor *viewerBackground;
 
 - (NSInteger)currentPhotoIndex;
 - (void)moveToPhotoAtIndex:(NSInteger)index animated:(BOOL)animated;

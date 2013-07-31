@@ -47,6 +47,7 @@
 @synthesize photoSource=_photoSource; 
 @synthesize photoViews=_photoViews;
 @synthesize _fromPopover;
+@synthesize viewerBackground=_viewerBackground;
 
 - (id)initWithPhoto:(id<EGOPhoto>)aPhoto {
 	return [self initWithPhotoSource:[[[EGOQuickPhotoSource alloc] initWithPhotos:[NSArray arrayWithObjects:aPhoto,nil]] autorelease]];
@@ -91,7 +92,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	self.view.backgroundColor = [UIColor blackColor];
+	self.view.backgroundColor = self.viewerBackground;
 	self.wantsFullScreenLayout = YES;
 	
 	if (!_scrollView) {
@@ -571,8 +572,8 @@
 	self.scrollView.hidden = YES;
 	
 	CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"backgroundColor"];
-	animation.fromValue = _fullScreen ? (id)[UIColor clearColor].CGColor : (id)[UIColor blackColor].CGColor;
-	animation.toValue = _fullScreen ? (id)[UIColor blackColor].CGColor : (id)[UIColor clearColor].CGColor;
+	animation.fromValue = _fullScreen ? (id)[UIColor clearColor].CGColor : (id)(self.viewerBackground).CGColor;
+	animation.toValue = _fullScreen ? (id)(self.viewerBackground).CGColor : (id)[UIColor clearColor].CGColor;
 	animation.removedOnCompletion = NO;
 	animation.fillMode = kCAFillModeForwards;
 	animation.duration = 0.4f;
@@ -631,6 +632,15 @@
 
 #pragma mark -
 #pragma mark Photo View Methods
+
+- (UIColor *)viewerBackground
+{
+    if (_viewerBackground != nil)
+    {
+        return _viewerBackground;
+    }
+    return [UIColor blackColor];
+}
 
 - (void)photoViewDidFinishLoading:(NSNotification*)notification{
 	if (notification == nil) return;
@@ -845,7 +855,8 @@
 		photoView = [[EGOPhotoImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height)];
 		[self.photoViews replaceObjectAtIndex:page withObject:photoView];
 		[photoView release];
-		
+		photoView.backgroundColor = self.viewerBackground;
+        photoView.scrollView.backgroundColor = self.viewerBackground;
 	} 
 	
 	[photoView setPhoto:[self.photoSource photoAtIndex:page]];
@@ -1053,6 +1064,7 @@
 	[_scrollView release], _scrollView=nil;
 	[_oldToolBarTintColor release], _oldToolBarTintColor = nil;
 	[_oldNavBarTintColor release], _oldNavBarTintColor = nil;
+    [_viewerBackground release], _viewerBackground = nil;
 	
     [super dealloc];
 }
